@@ -1,0 +1,91 @@
+.mmm-nest-cameras .nest-wrapper {
+    display: flex;
+    flex-flow: row wrap;
+    margin: -10px;
+}
+
+.mmm-nest-cameras .nest-wrapper.left {
+    justify-content: flex-start;
+}
+
+.mmm-nest-cameras .nest-wrapper.center {
+    justify-content: center;
+}
+
+.mmm-nest-cameras .nest-wrapper.right {
+    justify-content: flex-end;
+}
+
+.mmm-nest-cameras .nest-wrapper .camera {
+    box-sizing: border-box;
+    position: relative;
+    margin: 10px;
+}
+
+.mmm-nest-cameras .nest-wrapper .camera > img {
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.mmm-nest-cameras .nest-wrapper .camera img {
+    width: 100%;
+    display: block;
+}
+
+.mmm-nest-cameras .nest-wrapper .camera webview {
+    width: 100%;
+    height: 100%;
+}
+
+.mmm-nest-cameras .nest-wrapper .camera .camera-name {
+    display: block;
+    padding-top: 10px;
+    text-transform: capitalize;
+    text-align: center;
+}
+
+.mmm-nest-cameras .nest-wrapper .inner {
+    position: relative;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.mmm-nest-cameras .nest-wrapper .with-stream .inner > img {
+    visibility: hidden;
+}
+
+.mmm-nest-cameras .nest-wrapper .img-loading,
+.mmm-nest-cameras .nest-wrapper .stream {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.mmm-nest-cameras .nest-wrapper .offline {
+    opacity: 0.6;
+}
+
+.mmm-nest-cameras .nest-wrapper .no-snapshot > img {
+    width: calc(100% - 2px);
+    border: 1px #666 solid;
+    border-radius: 5px;
+}
+
+.mmm-nest-cameras .nest-wrapper .no-snapshot .message {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    text-align: center;
+}
