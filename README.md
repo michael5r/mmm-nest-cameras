@@ -51,7 +51,7 @@ If you're only using this module in `image` mode, you don't need to add this obj
 
 Option                  | Type             | Default  | Description
 ------------------------|------------------|----------|-------------------------------------------------------
-`token`                 | `int`            | -        | **This value is required for this module to work.**
+`token`                 | `string`         | -        | **This value is required for this module to work.**
 `camerasToShow`         | `string`,`array` | `all`    | `all` or an `array` with [camera locations](#camera-locations)
 `camerasPerRow`         | `int`            | `3`      | How many cameras shown pr. row. [See below](#camera-size)
 `cameraMode`            | `string`         | `image`  | [`image`](#image-mode) or [`video`](#video-mode)
