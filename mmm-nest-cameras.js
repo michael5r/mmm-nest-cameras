@@ -21,10 +21,12 @@ Module.register('mmm-nest-cameras', {
         hideNoSnapshotCameras: true,
         hideOfflineCameras: false,
         alignment: 'left',
+        motionSleep: false,
+        motionSleepSeconds: 300, // this is in seconds (not ms)
         updateInterval: 3 * 60 * 1000,
         animationSpeed: 2 * 1000,
         initialLoadDelay: 0,
-        version: '1.0.0'
+        version: '1.1.0'
     },
 
     getStyles: function() {
@@ -41,6 +43,9 @@ Module.register('mmm-nest-cameras', {
 
         this.usingNestStatusData = false; // whether we're using data from the `mmm-nest-status` module
         this.loaded = false;
+
+        this.sleepTimer = null;
+        this.sleeping = false;
 
         this.cameras = [];
         this.camerasStatus = [];
@@ -275,13 +280,17 @@ Module.register('mmm-nest-cameras', {
 
     getData: function() {
 
-        if (this.config.token === '') {
-            this.errMsg = 'Please run getToken.sh and add your Nest API token to the MagicMirror config.js file.';
-            this.updateDom(this.config.animationSpeed);
-        } else {
-            this.sendSocketNotification('MMM_NEST_CAMERAS_GET', {
-                token: this.config.token
-            });
+        if ((this.motionSleep && !this.sleeping) || (!this.motionSleep)) {
+
+            if (this.config.token === '') {
+                this.errMsg = 'Please run getToken.sh and add your Nest API token to the MagicMirror config.js file.';
+                this.updateDom(this.config.animationSpeed);
+            } else {
+                this.sendSocketNotification('MMM_NEST_CAMERAS_GET', {
+                    token: this.config.token
+                });
+            }
+
         }
 
     },
@@ -297,6 +306,8 @@ Module.register('mmm-nest-cameras', {
 
         */
 
+        var self = this;
+
         if (notification === 'ALL_MODULES_STARTED') {
 
             // check if `mmm-nest-status` module is installed
@@ -311,6 +322,18 @@ Module.register('mmm-nest-cameras', {
         } else if (notification === 'MMM_NEST_STATUS_UPDATE') {
             // use the data from the `mmm-nest-status` module
             this.processNestData(payload);
+
+        } else if ((notification === 'USER_PRESENCE') && (this.config.motionSleep)) {
+            if (payload === true) {
+                if (this.sleeping) {
+                    this.resumeModule();
+                } else {
+                    clearTimeout(self.sleepTimer);
+                    self.sleepTimer = setTimeout(function() {
+                        self.suspendModule()
+                    }, self.config.motionSleepSeconds * 1000);
+                }
+            }
         }
     },
 
@@ -335,6 +358,40 @@ Module.register('mmm-nest-cameras', {
             self.errMsg = 'The Nest API rate limit has been exceeded.<br>This module will try to load data again in 10 minutes.';
             self.updateDom(self.config.animationSpeed);
         }
+    },
+
+    suspendModule: function() {
+
+        var self = this;
+
+        this.hide(self.config.animationSpeed, function() {
+            self.sleeping = true;
+        });
+
+    },
+
+    resumeModule: function() {
+
+        var self = this;
+
+        if (this.sleeping) {
+
+            this.sleeping = false;
+
+            // get new data
+            if (!this.usingNestStatusData) {
+                this.getData();
+            }
+
+            this.show(self.config.animationSpeed, function() {
+                // restart timer
+                clearTimeout(self.sleepTimer);
+                self.sleepTimer = setTimeout(function() {
+                    self.suspendModule()
+                }, self.config.motionSleepSeconds * 1000);
+            });
+        }
+
     },
 
     processNestData: function(data) {

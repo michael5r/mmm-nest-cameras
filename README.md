@@ -1,6 +1,7 @@
 # Module: mmm-nest-cameras
 
 The `mmm-nest-cameras` module is a [MagicMirror](https://github.com/MichMich/MagicMirror) addon.
+This module requires MagicMirror version `2.5` or later.
 
 This module displays your [Nest](https://www.nest.com) cameras on your Magic Mirror and gives you the option to show either live streams or constantly-updated snapshots.
 
@@ -38,10 +39,10 @@ If you're only using this module in `image` mode, you don't need to add this obj
 
 ```js
 {
-    module: 'mmm-nest-cameras',
-    position: 'bottom_bar', // pick whichever position you want
+    module: "mmm-nest-cameras",
+    position: "bottom_bar", // pick whichever position you want
     config: {
-        token: YOUR_NEST_API_TOKEN,
+        token: "<YOUR_NEST_API_TOKEN>",
         // ... and whatever else configuration options you want to use
     }
 },
@@ -62,6 +63,8 @@ Option                  | Type             | Default  | Description
 `hideOfflineCameras`    | `boolean`        | `false`  | Whether to show cameras that are offline
 `updateInterval`        | `int`            | `180000` | Default is 3 minutes. I'd advise against changing this.
 `initialLoadDelay`      | `int`            | `0`      | How long to delay the initial load (in ms)
+`motionSleep`           | `boolean`        | `false`  | Suspend module when triggered by [MMM-PIR-Sensor](https://github.com/paviro/MMM-PIR-Sensor)
+`motionSleepSeconds`    | `int`            | `300`    | When motion is triggered, how long to wait before going to sleep. Default is 5 minutes.
 
 
 ## Camera Size
@@ -196,3 +199,16 @@ If you have `cameraMode` set to `video`, but your camera streams aren't playing,
 - if there's a grey `LIVE` text in the top left corner, you either have `autoPlay` set to `false` or the module was unable to start your camera stream. Either change `autoPlay` to `true` or try refreshing the page and see if that fixes the issue.
 
 - if there's no `LIVE` text on the camera image, your camera isn't shared publicly and as such this module can't play the stream. Check the [Public Url](#public-url) section above to see what you need to do.
+
+### How does the motionSleep setting work?
+
+Setting the `motionSleep` setting to `true` makes this module continually listen for `USER_PRESENCE` notifications from the [MMM-PIR-Sensor](https://github.com/paviro/MMM-PIR-Sensor) module. Whenever a positive `USER_PRESENCE` notification is received, the module will reset a timer based on your `motionSleepSeconds` setting. When the timer reaches zero, the module will then do two things:
+
+- temporarily stop pulling new data from Nest
+- hide the mmm-nest-cameras module
+
+You specify how long this timer should last by using the `motionSleepSeconds` setting - please note that this setting is in **seconds** (not ms).
+
+This sleep mode will last till the next positive `USER_PRESENCE` notification is received, at which point the module will resume by immediately pulling new Nest data and then showing the mmm-nest-cameras module again.
+
+This is a good option to enable if you're using a monitor that shows an ugly "no signal message" when the HDMI signal is lost and you've therefore turned off the `powerSaving` setting in the MMM-Pir-Sensor module.
