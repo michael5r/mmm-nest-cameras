@@ -10,13 +10,38 @@ This module displays your [Nest](https://www.nest.com) cameras on your Magic Mir
 ![image](https://user-images.githubusercontent.com/3209660/49823042-617d3880-fd44-11e8-8c57-df08ba206be1.png)
 *An example showing 3 cameras - one private camera (which, for privacy reasons, I blurred in this screenshoot) serving up static images and two public cameras streaming live.*
 
+
+## Table of Contents
+
+- [Installing the module](#installing-the-module)
+- [Getting the Nest Token](#getting-the-nest-token)
+- [Using the module](#using-the-module)
+- [General Configuration Options](#general-configuration-options)
+- [Camera Size](#camera-size)
+- [Video Mode](#video-mode)
+- [Image Mode](#image-mode)
+- [Camera Locations](#how-it-looks)
+- [Auto-Playing Video](#auto-playing-video)
+- [PSA about Nest Camera Streams](#psa-about-nest-camera-streams)
+  * [Web URL](#web-url)
+  * [Password-protected Public URL](#password-protected-public-url)
+  * [Public URL](#public-url)
+- [FAQ](#faq)
+  * [I'm getting a "Nest API rate limit has been exceeded"-error - what does it mean?](#im-getting-a-nest-api-rate-limit-has-been-exceeded-error---what-does-it-mean)
+  * [The image quality of my snapshots is bad. Why is this?](#the-image-quality-of-my-snapshots-is-bad-why-is-this)
+  * [My camera streams aren't playing](#my-camera-streams-arent-playing)
+  * [How does the motionSleep setting work?](#how-does-the-motionsleep-setting-work)
+
+
 ## Installing the module
 Run `git clone https://github.com/michael5r/mmm-nest-cameras.git` from inside your `MagicMirror/modules` folder.
+
 
 ## Getting the Nest Token
 Run `getToken.sh` in your terminal. This will walk you through setting up a [Nest Developer Account](https://developers.nest.com) (which is free) and will get you the token you need to allow this module access to the data from your Nest products.
 
 If you're using my [`mmm-nest-status`](https://github.com/michael5r/mmm-nest-status) module as well, just copy the token you're using in that module. As an added bonus, both modules will use the same Nest API data, so you aren't making multiple data calls.
+
 
 ## Using the module
 
@@ -47,6 +72,7 @@ If you're only using this module in `image` mode, you don't need to add this obj
     }
 },
 ```
+
 
 ## General Configuration Options
 
@@ -85,6 +111,7 @@ If, on the other hand, you're using this module in the narrower positions (like 
 
 This limits the width of the camera images to `300px` (which you, of course, can update to whatever width that looks nice on your mirror).
 
+
 ## Video Mode
 
 Please read the [PSA about Nest Camera Streams](#PSA-about-nest-camera-streams) below.
@@ -97,6 +124,7 @@ When setting the `cameraMode` to `video` in this module, you will see a live str
 
 - If your camera is offline, you will get a message telling you so. If you don't wish to see cameras that are offline, set `hideOfflineCameras` to `true` in your module configuration.
 
+
 ## Image Mode
 
 When setting the `cameraMode` to `image` in this module, you will see snapshots from any Nest camera on your network. These are generated from the actual camera stream.
@@ -104,6 +132,7 @@ When setting the `cameraMode` to `image` in this module, you will see snapshots 
 - If the camera is online and there's an error getting the snapshot, you'll get a message telling you no snapshot is available. If you don't wish to see cameras that have no snapshots, set `hideNoSnapshotCameras` to `true` in your module configuration.
 
 - If your camera is offline, you will get a message telling you so. If you don't wish to see cameras that are offline, set `hideOfflineCameras` to `true` in your module configuration.
+
 
 ## Camera Locations
 
@@ -116,17 +145,20 @@ camerasToShow: ['outside']
 
 This will now only show cameras that have a location of `outside` (it's not case sensitive, so you could have written `Outside` as well).
 
+
 ## Auto-Playing Video
 
 If `autoPlay` is set to `true` in your configuration, this module will attempt to auto-play any **publicly-shared** Nest camera streams. Please note that this should be considered an experimental feature - normally you're supposed to click a play button to start the video in the Nest camera stream, but this module overrides this through a `preload` script for the `webview` object.
 
 Don't be alarmed if the video doesn't start playing immediately - there's a 5 second delay before the module tries to start the video, and then it will try to do so 3 more times before giving up.
 
+
 ## PSA about Nest Camera Streams
 
 From looking at the Nest camera API, you'd think there'd be plenty of options for embedding a camera stream into an `iframe` or `webview` suitable for use on a magic mirror. When you start digging, however, this turns out to be pretty far from the truth, unfortunately.
 
 As of December 2018, the Nest camera API allows for the following camera streams:
+
 
 ### Web URL
 
@@ -142,6 +174,7 @@ This is what it looks like:
 Secondly, the view itself has a ton of extraneous options & information (if, for instance, the camera isn't using `Nest Aware` you'd see a large banner advertising this at the bottom) - it's not just a "clean" camera stream.
 
 As such, this isn't really useful for a magic mirror.
+
 
 ### Password-protected Public URL
 
@@ -161,6 +194,7 @@ And, lastly, this stream doesn't begin playing automatically - you'll have to ma
 
 So ... this is a no-go as well.
 
+
 ### Public URL
 
 API description: "You can access this URL when a user makes their video stream public."
@@ -175,6 +209,7 @@ It is also a **security risk** to make your camera completely public this way.
 Check out this blog post by [Den Delimarsky](https://dennisdel.com/blog/psa-nest/).
 
 So ... please choose carefuly before you share your camera like this - I would **never** recommend doing this for an indoor camera.
+
 
 ## FAQ
 
