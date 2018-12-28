@@ -75,7 +75,15 @@ If, for instance, you set this option to `3`, this means that up to 3 cameras wi
 
 If you're adding this module in any of the full-width positions (like `bottom_bar`, `top_bar`, etc), setting this to `3` or `4` looks nice.
 
-If, on the other hand, you're using this module in the narrower positions (like `top_left`, `top_right`, `bottom_left`, etc), I'd suggest setting this to `1` or `2`.
+If, on the other hand, you're using this module in the narrower positions (like `top_left`, `top_right`, `bottom_left`, etc), I'd suggest setting this to `1` or `2` and also adding the following to your `custom.css` file:
+
+```css
+.mmm-nest-cameras .module-content {
+    width: 300px;
+}
+```
+
+This limits the width of the camera images to `300px` (which you, of course, can update to whatever width that looks nice on your mirror).
 
 ## Video Mode
 
